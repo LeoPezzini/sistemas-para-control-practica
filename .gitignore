@@ -1,0 +1,22 @@
+# Archivos temporales
+*.tmp
+*.bak
+*.swp
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Directorios de compilación
+build/
+
+# Arduino IDE / editores
+.idea/
+
+# Visual Studio Code
+.vscode/
+
+# Archivos generados
+*.elf
+*.bin
+*.hex
