@@ -46,7 +46,7 @@ mediante RapidSCADA.
 - [x] Configuración inicial del entorno
 - [x] Prueba de carga de firmware
 - [x] Prueba Blink
-- [ ] Prueba DHT11
+- [x] Prueba DHT11
 - [ ] Prueba HC-SR04
 - [ ] Prueba encoder
 - [ ] Implementación Modbus RTU
