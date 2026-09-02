@@ -14,3 +14,5 @@
 
 | DEC-004 | 2026-09-01 | Utilizar dhtESP32-rmt para adquisición del DHT11 | La lectura con la librería inicial presentó fallos; la implementación mediante RMT permitió lecturas estables | Aprobada |
 
+| DEC-005 | 2026-09-02 | Evaluar ESP32 NodeMCU como nodo de adquisición | DHT11 y HC-SR04 fueron verificados correctamente en GPIO directos del NodeMCU, mientras que las pruebas realizadas sobre la Waveshare presentaron dificultades de interfaz | En evaluación |
+

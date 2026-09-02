@@ -62,3 +62,21 @@ La exactitud absoluta de las mediciones no fue verificada con instrumental calib
 
 \*\*Estado:\*\* APROBADO
 
+## TEST-003 - DHT11 sobre ESP32 NodeMCU
+
+- GPIO DATA: 27
+- Alimentación: 3.3 V
+- Resultado observado: ~23 °C, ~18 % HR
+- Estado: APROBADO
+
+## TEST-004 - HC-SR04 sobre ESP32 NodeMCU
+
+- TRIG: GPIO25
+- ECHO: GPIO26
+- ECHO adaptado mediante divisor 1 kΩ / 2 kΩ
+- Alimentación: 5 V
+- Comparación preliminar mediante cinta métrica
+- Diferencia observada: aproximadamente 1 cm
+- Calibración definitiva: pendiente de patrón de cátedra
+- Estado: APROBADO FUNCIONALMENTE
+
