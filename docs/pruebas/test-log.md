@@ -1,82 +1,152 @@
-\## TEST-002 — DHT11
+# Registro de pruebas
 
+## TEST-001 - Programación ESP32 NodeMCU
 
+**Fecha:** 2026-09-01
 
-\*\*Objetivo:\*\*  
+### Objetivo
 
-Verificar la adquisición de temperatura y humedad mediante un sensor DHT11 conectado directamente al ESP32-S3.
+Verificar comunicación USB, programación y ejecución de firmware sobre ESP32 NodeMCU.
 
+### Procedimiento
 
+Se instaló el driver CP2102 y se seleccionó el puerto COM correspondiente.
 
-\*\*Conexión:\*\*
+Se cargó un programa Blink utilizando GPIO2.
 
-\- VCC → 3,3 V
+### Resultado
 
-\- GND → GND lógico
+El firmware fue cargado correctamente y el LED respondió según lo esperado.
 
-\- DATA → GPIO1
+### Estado
 
+**APROBADO**
 
+---
 
-\*\*Software:\*\*
+## TEST-002 - DHT11 sobre ESP32 NodeMCU
 
-\- Plataforma: ESP32-S3
+**Fecha:** 2026-09-01
 
-\- Librería utilizada: dhtESP32-rmt
+### Objetivo
 
-\- Período de lectura: 5 s
+Verificar adquisición de temperatura y humedad mediante DHT11.
 
+### Configuración
 
+- VCC: 3.3 V
+- GND: GND
+- DATA: GPIO27
+- Librería: dhtESP32-rmt
 
-\*\*Resultados:\*\*
+### Resultado
 
-\- Comunicación con el sensor: correcta.
+Se obtuvieron lecturas estables.
 
-\- Temperatura estabilizada observada: aproximadamente 24 °C.
+Valores preliminares:
 
-\- Humedad estabilizada observada: aproximadamente 16–21 %.
+- Temperatura: aproximadamente 23 °C
+- Humedad: aproximadamente 18 %
 
-\- El sensor respondió correctamente ante cambios de humedad provocados por aire exhalado.
+Inicialmente se observaron errores de comunicación debido a un falso contacto en la alimentación del sensor.
 
-\- El sensor respondió ante perturbaciones térmicas.
+Una vez corregida la conexión, la adquisición resultó estable.
 
-\- Se observaron algunos errores de comunicación durante perturbaciones térmicas rápidas.
+### Estado
 
+**APROBADO**
 
+---
 
-\*\*Prueba de referencia:\*\*
+## TEST-003 - HC-SR04 sobre ESP32 NodeMCU
 
-El mismo módulo DHT11 fue probado con un Arduino UNO alimentado a 5 V, obteniéndose lecturas correctas.
+**Fecha:** 2026-09-01
 
+### Objetivo
 
+Verificar medición de distancia mediante sensor ultrasónico HC-SR04.
 
-\*\*Observaciones:\*\*
+### Configuración
 
-La librería DHT utilizada inicialmente no permitió obtener lecturas válidas en el ESP32-S3. La lectura mediante `dhtESP32-rmt`, basada en el periférico RMT del ESP32, funcionó correctamente.
-
-
-
-La exactitud absoluta de las mediciones no fue verificada con instrumental calibrado.
-
-
-
-\*\*Estado:\*\* APROBADO
-
-## TEST-003 - DHT11 sobre ESP32 NodeMCU
-
-- GPIO DATA: 27
-- Alimentación: 3.3 V
-- Resultado observado: ~23 °C, ~18 % HR
-- Estado: APROBADO
-
-## TEST-004 - HC-SR04 sobre ESP32 NodeMCU
-
+- VCC: 5 V
+- GND: GND
 - TRIG: GPIO25
 - ECHO: GPIO26
-- ECHO adaptado mediante divisor 1 kΩ / 2 kΩ
-- Alimentación: 5 V
-- Comparación preliminar mediante cinta métrica
-- Diferencia observada: aproximadamente 1 cm
-- Calibración definitiva: pendiente de patrón de cátedra
-- Estado: APROBADO FUNCIONALMENTE
 
+La señal ECHO se adaptó mediante divisor resistivo:
+
+- R superior: 1 kΩ
+- R inferior: 2 kΩ
+
+### Resultado
+
+El sensor respondió correctamente.
+
+La medición fue comparada preliminarmente con una cinta métrica.
+
+Se observó una diferencia aproximada de 1 cm.
+
+### Observaciones
+
+La diferencia observada no será corregida empíricamente en esta etapa.
+
+La calibración definitiva se realizará utilizando el patrón de referencia provisto por la cátedra y considerando posteriormente la compensación ambiental correspondiente.
+
+### Estado
+
+**APROBADO FUNCIONALMENTE**
+
+---
+
+## TEST-004 - Comunicación RS485
+
+**Fecha:** 2026-09-02
+
+### Objetivo
+
+Verificar la capa física de comunicación entre ESP32 y PC mediante RS485.
+
+### Arquitectura de prueba
+
+ESP32 NodeMCU
+→ UART2
+→ MAX485
+→ RS485
+→ conversor USB-RS485
+→ PC
+
+### Configuración ESP32
+
+- TX2: GPIO17
+- RX2: GPIO16
+- DE + /RE: GPIO4
+- Baud rate: 9600
+- Formato: 8N1
+
+### Adaptación de nivel
+
+El MAX485 se alimentó a 5 V.
+
+La salida RO fue conectada a GPIO16 mediante divisor resistivo 1 kΩ / 2 kΩ.
+
+Se midieron aproximadamente 3.1 V en la entrada GPIO16.
+
+### Procedimiento
+
+El ESP32 transmitió periódicamente:
+
+`HOLA RS485 n`
+
+Los datos fueron recibidos mediante PuTTY utilizando el puerto COM correspondiente al adaptador USB-RS485.
+
+### Resultado
+
+La recepción de mensajes fue correcta y continua.
+
+### Estado
+
+**APROBADO**
+
+### Próximo ensayo
+
+Implementación de Modbus RTU entre ESP32 y Modbus Poll.

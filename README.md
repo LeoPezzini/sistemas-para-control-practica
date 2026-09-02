@@ -1,58 +1,292 @@
-# sistemas-para-control-practica
+# \# Sistemas para Control
 
-Práctica de la asignatura Sistemas para Control. Adquisición de variables mediante ESP32-S3, comunicación Modbus RTU sobre RS485 y supervisión mediante RapidSCADA.
+# 
 
-# Sistemas para Control
+# Repositorio correspondiente a la práctica de la asignatura \*\*Sistemas para Control\*\*.
 
-Repositorio correspondiente a la práctica de la asignatura
-Sistemas para Control.
+# 
 
-## Descripción
+# \## Descripción
 
-Desarrollo de un sistema de adquisición, procesamiento y
-supervisión de variables utilizando una plataforma
-ESP32-S3-POE-ETH-8DI-8DO.
+# 
 
-El sistema contempla la adquisición de señales provenientes
-de sensores, procesamiento mediante el microcontrolador,
-comunicación mediante Modbus RTU sobre RS485 y supervisión
-mediante RapidSCADA.
+# Desarrollo de un sistema de adquisición, procesamiento, comunicación y supervisión de variables utilizando microcontroladores ESP32.
 
-## Integrantes
+# 
 
-* Leonardo Pezzini
-* Federico Cappato
+# El sistema contempla:
 
-## Plataforma
+# 
 
-* Waveshare ESP32-S3-POE-ETH-8DI-8DO
-* ESP32-S3
-* Arduino IDE
-* Modbus RTU / RS485
-* RapidSCADA
-* Modbus Poll
+# \- adquisición de temperatura y humedad;
 
-## Sensores
+# \- medición de distancia mediante ultrasonido;
 
-* DHT11 — temperatura/humedad
-* HC-SR04 — distancia
-* Encoder — pendiente de especificación
+# \- adquisición mediante encoder incremental;
 
-## Estado del proyecto
+# \- comunicación Modbus RTU sobre RS485;
 
-🚧 En desarrollo
+# \- supervisión mediante RapidSCADA;
 
-### Progreso
+# \- registro y análisis de variables.
 
-* \[x] Configuración inicial del entorno
-* \[x] Prueba de carga de firmware
-* \[x] Prueba Blink
-* \[x] Prueba DHT11
-* \[x] Prueba HC-SR04
-* \[ ] Prueba encoder
-* \[ ] Implementación Modbus RTU
-* \[ ] Configuración RS485
-* \[ ] Integración con RapidSCADA
-* \[ ] Pruebas de integración
-* \[ ] Documentación final
+# 
+
+# Actualmente se encuentra en evaluación una arquitectura basada en un \*\*ESP32 NodeMCU como nodo de adquisición\*\*, debido a dificultades encontradas al utilizar GPIO directos de la placa Waveshare ESP32-S3-POE-ETH-8DI-8DO para determinados sensores.
+
+# 
+
+# \## Integrantes
+
+# 
+
+# \- Leonardo Pezzini
+
+# \- Federico Cappato
+
+# 
+
+# \## Hardware
+
+# 
+
+# \### ESP32 NodeMCU
+
+# 
+
+# Utilizado actualmente para las pruebas de adquisición y comunicación.
+
+# 
+
+# Asignación verificada:
+
+# 
+
+# | Dispositivo | Señal | GPIO |
+
+# |---|---|---:|
+
+# | DHT11 | DATA | 27 |
+
+# | HC-SR04 | TRIG | 25 |
+
+# | HC-SR04 | ECHO | 26 |
+
+# 
+
+# \### Waveshare ESP32-S3-POE-ETH-8DI-8DO
+
+# 
+
+# Plataforma provista por la cátedra.
+
+# 
+
+# Su utilización definitiva dentro de la arquitectura se encuentra pendiente de definición.
+
+# 
+
+# \### Comunicación RS485
+
+# 
+
+# Para las pruebas se utiliza:
+
+# 
+
+# \- módulo MAX485 alimentado a 5 V;
+
+# \- adaptación de nivel en la salida RO mediante divisor resistivo;
+
+# \- conversor USB-RS485 basado en CH340;
+
+# \- UART2 del ESP32 NodeMCU.
+
+# 
+
+# Asignación propuesta:
+
+# 
+
+# | MAX485 | ESP32 |
+
+# |---|---|
+
+# | DI | GPIO17 / TX2 |
+
+# | RO | GPIO16 / RX2 mediante divisor |
+
+# | DE + /RE | GPIO4 |
+
+# | VCC | 5 V |
+
+# | GND | GND |
+
+# 
+
+# \## Sensores
+
+# 
+
+# \### DHT11
+
+# 
+
+# Sensor de temperatura y humedad.
+
+# 
+
+# Estado: \*\*verificado funcionalmente\*\*.
+
+# 
+
+# Configuración actual:
+
+# 
+
+# \- alimentación: 3.3 V;
+
+# \- DATA: GPIO27;
+
+# \- librería: `dhtESP32-rmt`.
+
+# 
+
+# Lecturas preliminares obtenidas:
+
+# 
+
+# \- temperatura: aproximadamente 23 °C;
+
+# \- humedad relativa: aproximadamente 18 %.
+
+# 
+
+# \### HC-SR04
+
+# 
+
+# Sensor ultrasónico de distancia.
+
+# 
+
+# Estado: \*\*verificado funcionalmente\*\*.
+
+# 
+
+# Configuración actual:
+
+# 
+
+# \- alimentación: 5 V;
+
+# \- TRIG: GPIO25;
+
+# \- ECHO: GPIO26 mediante divisor resistivo 1 kΩ / 2 kΩ.
+
+# 
+
+# La comparación preliminar con cinta métrica mostró una diferencia aproximada de 1 cm.
+
+# 
+
+# La caracterización y calibración definitiva se realizará posteriormente utilizando el patrón provisto por la cátedra.
+
+# 
+
+# \### Encoder
+
+# 
+
+# Pendiente de especificación y entrega de información por parte de la cátedra.
+
+# 
+
+# \## Comunicación
+
+# 
+
+# Se verificó correctamente la comunicación:
+
+# 
+
+# ESP32 NodeMCU → MAX485 → RS485 → USB-RS485 → PC
+
+# 
+
+# La prueba consistió en el envío periódico de texto desde UART2 del ESP32 y su recepción en la PC mediante PuTTY.
+
+# 
+
+# Configuración utilizada:
+
+# 
+
+# \- 9600 baud;
+
+# \- 8 bits de datos;
+
+# \- sin paridad;
+
+# \- 1 bit de stop.
+
+# 
+
+# Próximo objetivo:
+
+# 
+
+# implementar un esclavo \*\*Modbus RTU\*\* en el ESP32 y verificar su lectura mediante Modbus Poll.
+
+# 
+
+# \## Software
+
+# 
+
+# \- Arduino IDE
+
+# \- ESP32 Arduino Core
+
+# \- Modbus Poll
+
+# \- RapidSCADA
+
+# \- PuTTY
+
+# \- Git / GitHub
+
+# 
+
+# \## Estado del proyecto
+
+# 
+
+# | Etapa | Estado |
+
+# |---|---|
+
+# | Configuración ESP32 NodeMCU | ✅ |
+
+# | Blink ESP32 | ✅ |
+
+# | DHT11 | ✅ |
+
+# | HC-SR04 | ✅ |
+
+# | Comunicación UART → RS485 → PC | ✅ |
+
+# | Encoder | ⏳ |
+
+# | Modbus RTU | ⏳ |
+
+# | Integración de sensores | ⏳ |
+
+# | RapidSCADA | ⏳ |
+
+# | Caracterización HC-SR04 | ⏳ |
+
+# | Registro de variables | ⏳ |
+
+# | Documentación final | ⏳ |
 
