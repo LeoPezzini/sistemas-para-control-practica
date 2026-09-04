@@ -4,54 +4,98 @@ Repositorio correspondiente a la práctica de la asignatura **Sistemas para Cont
 
 ## Descripción
 
-Desarrollo de un sistema de adquisición, procesamiento, comunicación y supervisión de variables utilizando microcontroladores ESP32.
+Desarrollo de un sistema de adquisición, procesamiento, comunicación y supervisión de variables utilizando un microcontrolador ESP32.
 
 El sistema contempla:
 
 - adquisición de temperatura y humedad;
 - medición de distancia mediante ultrasonido;
+- compensación de la medición ultrasónica por temperatura;
+- caracterización del sensor ultrasónico contra un instrumento patrón;
 - adquisición mediante encoder incremental;
 - comunicación Modbus RTU sobre RS485;
 - supervisión mediante RapidSCADA;
 - registro y análisis de variables.
-
-Actualmente se encuentra en evaluación una arquitectura basada en un **ESP32 NodeMCU como nodo de adquisición**, debido a dificultades encontradas al utilizar GPIO directos de la placa Waveshare ESP32-S3-POE-ETH-8DI-8DO para determinados sensores.
 
 ## Integrantes
 
 - Leonardo Pezzini
 - Federico Cappato
 
+## Arquitectura
+
+Se utiliza un **ESP32 NodeMCU como nodo principal de adquisición y procesamiento**.
+
+La utilización del ESP32 NodeMCU fue consultada y aceptada por la cátedra.
+
+Arquitectura actual:
+
+```text
+DHT11 ──────────────┐
+                    │
+HC-SR04 ────────────┼──► ESP32 NodeMCU
+                    │
+Encoder ────────────┘
+                         │
+                       UART2
+                         │
+                         ▼
+                       MAX485
+                         │
+                       RS485
+                         │
+                         ▼
+                     USB-RS485
+                         │
+                         ▼
+                         PC
+                         │
+                    Modbus Poll
+                         │
+                    RapidSCADA
+```
+
 ## Hardware
 
 ### ESP32 NodeMCU
 
-Utilizado actualmente para las pruebas de adquisición y comunicación.
+Nodo principal de adquisición, procesamiento y comunicación.
 
-Asignación verificada:
+Asignación actual de GPIO:
 
-| Dispositivo | Señal | GPIO |
-|---|---|---:|
-| DHT11 | DATA | 27 |
-| HC-SR04 | TRIG | 25 |
-| HC-SR04 | ECHO | 26 |
+| Dispositivo | Señal | GPIO | Estado |
+|---|---|---:|---|
+| DHT11 | DATA | 27 | Verificado |
+| HC-SR04 | TRIG | 25 | Verificado |
+| HC-SR04 | ECHO | 26 | Verificado |
+| MAX485 | TX / DI | 17 | Verificado |
+| MAX485 | RX / RO | 16 | Verificado |
+| MAX485 | DE + /RE | 4 | Verificado |
+| Encoder | Canal A | - | Pendiente |
+| Encoder | Canal B | - | Pendiente |
 
 ### Waveshare ESP32-S3-POE-ETH-8DI-8DO
 
-Plataforma provista por la cátedra.
+Plataforma provista inicialmente por la cátedra.
 
-Su utilización definitiva dentro de la arquitectura se encuentra pendiente de definición.
+Durante las primeras pruebas se evaluó su utilización para adquisición directa de sensores.
+
+Las entradas digitales de la placa corresponden a interfaces industriales optoaisladas y no a GPIO convencionales de 3.3 V, por lo que no resultaron adecuadas para determinados sensores utilizados en la práctica.
+
+También se realizaron pruebas mediante GPIO directos disponibles en la placa.
+
+Finalmente se decidió utilizar un ESP32 NodeMCU como nodo principal de adquisición, decisión aceptada por la cátedra.
 
 ### Comunicación RS485
 
-Para las pruebas se utiliza:
+Se utiliza:
 
 - módulo MAX485 alimentado a 5 V;
 - adaptación de nivel en la salida RO mediante divisor resistivo;
 - conversor USB-RS485 basado en CH340;
 - UART2 del ESP32 NodeMCU.
 
-Asignación propuesta:
+Asignación:
 
 | MAX485 | ESP32 |
 |---|---|
@@ -61,72 +105,165 @@ Asignación propuesta:
 | VCC | 5 V |
 | GND | GND |
 
+La salida RO del MAX485 se adapta mediante un divisor resistivo de:
+
+- 1 kΩ entre RO y GPIO16;
+- 2 kΩ entre GPIO16 y GND.
+
+Durante las pruebas se midieron aproximadamente:
+
+- RO: 4.57 V;
+- GPIO16: 3.18 V.
+
 ## Sensores
 
 ### DHT11
 
-Sensor de temperatura y humedad.
+Sensor utilizado para medir temperatura y humedad relativa.
 
 Estado: **verificado funcionalmente**.
 
-Configuración actual:
+Configuración:
 
 - alimentación: 3.3 V;
 - DATA: GPIO27;
 - librería: `dhtESP32-rmt`.
 
-Lecturas preliminares obtenidas:
-
-- temperatura: aproximadamente 23 °C;
-- humedad relativa: aproximadamente 18 %.
+La temperatura medida también se utiliza para compensar la medición realizada mediante ultrasonido.
 
 ### HC-SR04
 
-Sensor ultrasónico de distancia.
+Sensor ultrasónico utilizado para medir distancia.
 
 Estado: **verificado funcionalmente**.
 
-Configuración actual:
+Configuración:
 
 - alimentación: 5 V;
 - TRIG: GPIO25;
 - ECHO: GPIO26 mediante divisor resistivo 1 kΩ / 2 kΩ.
 
-La comparación preliminar con cinta métrica mostró una diferencia aproximada de 1 cm.
+La señal ECHO se adapta a aproximadamente 3.3 V antes de ingresar al ESP32.
 
-La caracterización y calibración definitiva se realizará posteriormente utilizando el patrón provisto por la cátedra.
+#### Compensación por temperatura
+
+La distancia ultrasónica depende de la velocidad de propagación del sonido.
+
+Como aproximación se utiliza:
+
+```text
+c(T) = 331.3 + 0.606 T
+```
+
+donde:
+
+- `c` es la velocidad del sonido en m/s;
+- `T` es la temperatura ambiente en °C.
+
+El tiempo medido por el HC-SR04 corresponde al recorrido de ida y vuelta, por lo que:
+
+```text
+d = t · c(T) / 2
+```
+
+El firmware conserva tanto la distancia calculada utilizando una velocidad fija de 343 m/s como la distancia compensada por temperatura.
+
+#### Caracterización
+
+La caracterización definitiva se realizará utilizando el medidor patrón **UNI-T LM50A** provisto por la cátedra.
+
+Se realizarán mediciones en incrementos de 10 cm dentro del rango definido para el ensayo.
+
+Para cada punto se registrarán:
+
+- distancia patrón;
+- temperatura;
+- distancia ultrasónica sin compensación;
+- distancia ultrasónica compensada;
+- error respecto del patrón.
+
+Posteriormente se realizará la curva de error correspondiente.
 
 ### Encoder
 
-Pendiente de especificación y entrega de información por parte de la cátedra.
+Pendiente de especificación e integración.
 
-## Comunicación
+## Modbus RTU
 
-Se verificó correctamente la comunicación:
+El ESP32 funciona como:
 
-ESP32 NodeMCU → MAX485 → RS485 → USB-RS485 → PC
+**Modbus RTU Slave ID 1**
 
-La prueba consistió en el envío periódico de texto desde UART2 del ESP32 y su recepción en la PC mediante PuTTY.
+La PC funciona como Modbus Master.
 
-Configuración utilizada:
+La comunicación fue verificada utilizando Modbus Poll mediante RS485.
+
+Configuración:
 
 - 9600 baud;
 - 8 bits de datos;
 - sin paridad;
-- 1 bit de stop.
+- 1 bit de stop;
+- modo RTU.
 
-Próximo objetivo:
+### Mapa de registros
 
-implementar un esclavo **Modbus RTU** en el ESP32 y verificar su lectura mediante Modbus Poll.
+| Registro | Variable | Escala |
+|---:|---|---:|
+| HR0 | Temperatura [°C] | ×10 |
+| HR1 | Humedad relativa [%] | ×10 |
+| HR2 | Distancia sin compensación [cm] | ×10 |
+| HR3 | Distancia compensada por temperatura [cm] | ×10 |
+
+Los registros se leen mediante:
+
+**Function Code 03 - Read Holding Registers**
+
+Inicialmente se verificó Modbus utilizando un registro de prueba con valor fijo `1234`.
+
+Posteriormente se integraron las variables adquiridas por los sensores.
+
+## Comunicación validada
+
+Se verificaron independientemente:
+
+1. transmisión ESP32 → PC mediante RS485;
+2. recepción PC → ESP32 mediante RS485;
+3. comunicación Modbus RTU bidireccional;
+4. lectura de registros Modbus;
+5. integración de DHT11 y HC-SR04 con Modbus RTU.
+
+Arquitectura validada:
+
+```text
+Sensores
+   ↓
+ESP32
+   ↓
+UART2
+   ↓
+MAX485
+   ↓
+RS485
+   ↓
+USB-RS485
+   ↓
+PC
+   ↓
+Modbus Poll
+```
 
 ## Software
 
 - Arduino IDE
 - ESP32 Arduino Core
+- `dhtESP32-rmt`
+- `modbus-esp8266 / ModbusRTU`
 - Modbus Poll
 - RapidSCADA
 - PuTTY
-- Git / GitHub
+- Git
+- GitHub
 
 ## Estado del proyecto
 
@@ -138,8 +275,9 @@ implementar un esclavo **Modbus RTU** en el ESP32 y verificar su lectura mediant
 | RS485 | ✅ |
 | Modbus RTU | ✅ |
 | Integración sensores + Modbus | ✅ |
+| Compensación por temperatura | ✅ |
 | Encoder | ⏳ |
-| RapidSCADA | ⏳ |
 | Caracterización HC-SR04 | ⏳ |
+| RapidSCADA | ⏳ |
 | Registro de variables | ⏳ |
 | Documentación final | ⏳ |

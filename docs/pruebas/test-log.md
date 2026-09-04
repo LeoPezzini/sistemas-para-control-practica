@@ -188,3 +188,34 @@ No se observaron errores de comunicación Modbus durante la prueba (`Err = 0`).
 ### Estado
 
 **APROBADO**
+
+## TEST-007 - Compensación térmica HC-SR04
+
+**Fecha:** 2026-09-04
+
+### Objetivo
+
+Verificar la incorporación de la temperatura medida por el DHT11
+al cálculo de distancia del HC-SR04.
+
+### Método
+
+Se calculan simultáneamente:
+
+- distancia utilizando velocidad fija del sonido de 343 m/s;
+- distancia utilizando velocidad compensada:
+
+`c(T) = 331.3 + 0.606*T`
+
+Los resultados se publican mediante:
+
+- HR2: distancia sin compensar ×10;
+- HR3: distancia compensada ×10.
+
+### Resultado
+
+Pendiente de ensayo.
+
+### Estado
+
+**PENDIENTE**
