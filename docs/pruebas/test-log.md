@@ -150,3 +150,41 @@ La recepción de mensajes fue correcta y continua.
 ### Próximo ensayo
 
 Implementación de Modbus RTU entre ESP32 y Modbus Poll.
+
+## TEST-006 - Integración DHT11 + HC-SR04 + Modbus RTU
+
+**Fecha:** 2026-09-04
+
+### Objetivo
+
+Verificar la adquisición simultánea de temperatura, humedad y distancia y su publicación mediante registros Modbus RTU.
+
+### Configuración
+
+ESP32 NodeMCU configurado como Modbus RTU Slave ID 1.
+
+Mapa de registros:
+
+| Registro | Variable | Escala |
+|---|---|---|
+| HR0 | Temperatura | valor × 10 |
+| HR1 | Humedad relativa | valor × 10 |
+| HR2 | Distancia | valor × 10 |
+
+### Resultado
+
+Modbus Poll leyó correctamente los tres Holding Registers mediante Function Code 03.
+
+Durante la prueba se observaron, entre otros, los siguientes valores:
+
+- HR0 = 240 → 24.0 °C
+- HR1 = 90 → 9.0 % HR
+- HR2 = 121 → 12.1 cm
+
+Se modificó físicamente la distancia entre el HC-SR04 y el objeto de prueba, observándose la correspondiente variación del registro HR2 en Modbus Poll.
+
+No se observaron errores de comunicación Modbus durante la prueba (`Err = 0`).
+
+### Estado
+
+**APROBADO**

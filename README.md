@@ -133,13 +133,12 @@ implementar un esclavo **Modbus RTU** en el ESP32 y verificar su lectura mediant
 | Etapa | Estado |
 |---|---|
 | Configuración ESP32 NodeMCU | ✅ |
-| Blink ESP32 | ✅ |
 | DHT11 | ✅ |
 | HC-SR04 | ✅ |
-| Comunicación UART → RS485 → PC | ✅ |
+| RS485 | ✅ |
+| Modbus RTU | ✅ |
+| Integración sensores + Modbus | ✅ |
 | Encoder | ⏳ |
-| Modbus RTU | ⏳ |
-| Integración de sensores | ⏳ |
 | RapidSCADA | ⏳ |
 | Caracterización HC-SR04 | ⏳ |
 | Registro de variables | ⏳ |
