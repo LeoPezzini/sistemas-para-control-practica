@@ -219,3 +219,87 @@ Pendiente de ensayo.
 ### Estado
 
 **PENDIENTE**
+
+## TEST-008 - Encoder incremental Omron E6B2-CWZ6C
+
+**Fecha:** 2026-09-09
+
+### Objetivo
+
+Verificar el funcionamiento del encoder incremental provisto por la cátedra antes de integrarlo al sistema.
+
+### Modelo
+
+- Omron E6B2-CWZ6C
+- Resolución: 1000 P/R
+- Salida: NPN open collector
+- Señales utilizadas: A y B
+
+### Configuración
+
+- alimentación: 5 V;
+- OUT A → GPIO32 con pull-up externo de 4.7 kΩ a 3.3 V;
+- OUT B → GPIO33 con pull-up externo de 4.7 kΩ a 3.3 V;
+- GND común con ESP32;
+- fase Z no utilizada.
+
+### Resultado
+
+El contador respondió correctamente al giro del eje:
+
+- sentido antihorario: incremento;
+- sentido horario: decremento;
+- eje detenido: contador estable.
+
+La detección del sentido mediante las fases A y B resultó correcta.
+
+### Estado
+
+**APROBADO**
+
+## TEST-009 - Integración encoder + Modbus RTU
+
+**Fecha:** 2026-09-09
+
+### Objetivo
+
+Verificar la adquisición de posición angular del encoder y su publicación mediante Modbus RTU.
+
+### Configuración
+
+Se utilizó el firmware integrado con:
+
+- DHT11;
+- HC-SR04;
+- compensación por temperatura;
+- encoder incremental;
+- Modbus RTU Slave ID 1.
+
+### Mapa de registros asociados al encoder
+
+- HR4: contador encoder - palabra alta;
+- HR5: contador encoder - palabra baja;
+- HR6: posición angular ×10.
+
+### Método
+
+Se marcó físicamente una posición inicial del eje.
+
+Se reinició el sistema tomando dicha posición como 0°.
+
+Luego se realizó una revolución completa hasta regresar a la marca inicial.
+
+### Resultado
+
+La posición angular publicada en HR6 volvió a aproximadamente 0° al regresar a la posición inicial.
+
+También se verificó que:
+
+- el ángulo aumenta en sentido antihorario;
+- el ángulo disminuye en sentido horario;
+- el valor se mantiene estable con el eje detenido;
+- la comunicación Modbus se mantuvo sin errores.
+
+### Estado
+
+**APROBADO**

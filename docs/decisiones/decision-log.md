@@ -20,3 +20,17 @@
 
 | DEC-007 | 2026-09-02 | Utilizar GPIO17, GPIO16 y GPIO4 para RS485 | Configuración verificada mediante comunicación ESP32-PC | Aprobada |
 
+| DEC-008 | 2026-09-02 | Utilizar ESP32 como Modbus RTU Slave ID 1 | La comunicación bidireccional fue verificada mediante Modbus Poll sobre RS485 | Aprobada |
+
+| DEC-009 | 2026-09-04 | Compensar la medición ultrasónica utilizando la temperatura medida por el DHT11 | La velocidad del sonido depende de la temperatura y la compensación constituye un requisito explícito de la práctica | Aprobada |
+
+| DEC-010 | 2026-09-04 | Conservar en Modbus la distancia sin compensar y la distancia compensada | Permite evaluar posteriormente el efecto de la compensación durante la caracterización contra el patrón | Aprobada |
+
+| DEC-011 | 2026-09-09 | Utilizar GPIO32 y GPIO33 para las fases A y B del encoder | Pines disponibles y funcionamiento verificado experimentalmente | Aprobada |
+
+| DEC-012 | 2026-09-09 | Representar la posición angular del encoder entre 0° y 360° | El enunciado requiere adquirir posición angular de un encoder incremental | Aprobada |
+
+| DEC-013 | 2026-09-09 | Utilizar 2000 cuentas por revolución en la implementación actual | Se detectan ambos flancos de la fase A en un encoder de 1000 P/R | Aprobada |
+
+| DEC-014 | 2026-09-09 | Transmitir el contador del encoder en dos registros Modbus de 16 bits | Permite conservar el contador de 32 bits con signo sin limitarlo a un único Holding Register | Aprobada |
+

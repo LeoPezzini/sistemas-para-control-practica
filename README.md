@@ -184,9 +184,33 @@ Para cada punto se registrarán:
 
 Posteriormente se realizará la curva de error correspondiente.
 
-### Encoder
+### Encoder incremental
 
-Pendiente de especificación e integración.
+Se utiliza un encoder óptico incremental **Omron E6B2-CWZ6C de 1000 P/R**.
+
+Configuración:
+
+- alimentación: 5 V;
+- salida: NPN open collector;
+- fase A: GPIO32 con pull-up externo de 4.7 kΩ a 3.3 V;
+- fase B: GPIO33 con pull-up externo de 4.7 kΩ a 3.3 V;
+- fase Z: no utilizada en esta etapa.
+
+El encoder fue probado inicialmente de forma independiente antes de integrarlo al firmware general.
+
+Se verificó:
+
+- incremento del contador en sentido antihorario;
+- decremento del contador en sentido horario;
+- estabilidad del contador con el eje detenido;
+- retorno de la posición angular a 0° luego de completar una revolución y regresar a la posición inicial marcada.
+
+Para la implementación actual se detectan ambos flancos de la fase A.
+
+Dado que el encoder es de 1000 P/R:
+
+```text
+1000 pulsos/revolución × 2 flancos = 2000 cuentas/revolución
 
 ## Modbus RTU
 
@@ -214,6 +238,9 @@ Configuración:
 | HR1 | Humedad relativa [%] | ×10 |
 | HR2 | Distancia sin compensación [cm] | ×10 |
 | HR3 | Distancia compensada por temperatura [cm] | ×10 |
+| HR4 | Contador encoder - palabra alta | 16 bits |
+| HR5 | Contador encoder - palabra baja | 16 bits |
+| HR6 | Posición angular [°] | ×10 |
 
 Los registros se leen mediante:
 
@@ -265,8 +292,6 @@ Modbus Poll
 - Git
 - GitHub
 
-## Estado del proyecto
-
 | Etapa | Estado |
 |---|---|
 | Configuración ESP32 NodeMCU | ✅ |
@@ -276,7 +301,8 @@ Modbus Poll
 | Modbus RTU | ✅ |
 | Integración sensores + Modbus | ✅ |
 | Compensación por temperatura | ✅ |
-| Encoder | ⏳ |
+| Encoder incremental | ✅ |
+| Integración encoder + Modbus | ✅ |
 | Caracterización HC-SR04 | ⏳ |
 | RapidSCADA | ⏳ |
 | Registro de variables | ⏳ |

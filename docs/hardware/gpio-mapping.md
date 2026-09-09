@@ -12,19 +12,19 @@
 
 | DHT11 | DATA | 27 | Verificado | Alimentación 3.3 V |
 
-| HC-SR04 | TRIG | 25 | Verificado | Salida directa |
+| HC-SR04 | TRIG | 25 | Verificado | Salida directa ESP32 |
 
 | HC-SR04 | ECHO | 26 | Verificado | Divisor 1 kΩ / 2 kΩ |
 
-| Encoder | Canal A | - | Pendiente | Esperando especificación |
+| MAX485 | DI / TX | 17 | Verificado | UART2 |
 
-| Encoder | Canal B | - | Pendiente | Esperando especificación |
+| MAX485 | RO / RX | 16 | Verificado | Divisor 1 kΩ / 2 kΩ |
 
-| MAX485 | DI / TX | 17 | Verificado | UART2 TX |
+| MAX485 | DE + /RE | 4 | Verificado | Control half-duplex |
 
-| MAX485 | RO / RX | 16 | Verificado | Divisor de nivel 5 V → \~3.3 V |
+| Encoder | Canal A | 32 | Verificado | Pull-up 4.7 kΩ a 3.3 V |
 
-| MAX485 | DE + /RE | 4 | Verificado | Control dirección RS485 |
+| Encoder | Canal B | 33 | Verificado | Pull-up 4.7 kΩ a 3.3 V |
 
 
 
@@ -32,17 +32,23 @@
 
 
 
-GPIO27 queda reservado para DHT11.
+\- GPIO27: DHT11
+
+\- GPIO25: HC-SR04 TRIG
+
+\- GPIO26: HC-SR04 ECHO
+
+\- GPIO17: RS485 TX
+
+\- GPIO16: RS485 RX
+
+\- GPIO4: RS485 DE/RE
+
+\- GPIO32: Encoder A
+
+\- GPIO33: Encoder B
 
 
 
-GPIO25 y GPIO26 quedan reservados para HC-SR04.
-
-
-
-GPIO16, GPIO17 y GPIO4 quedan reservados para comunicación RS485.
-
-
-
-La asignación del encoder se realizará una vez conocida su interfaz eléctrica y cantidad de canales.
+La fase Z del encoder no se utiliza en la implementación actual.
 
