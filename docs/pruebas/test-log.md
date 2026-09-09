@@ -303,3 +303,30 @@ También se verificó que:
 ### Estado
 
 **APROBADO**
+
+### TEST-010 - Comunicación Rapid SCADA ↔ ESP32 mediante Modbus RTU
+
+**Objetivo:** verificar la adquisición de los registros del nodo ESP32
+desde Rapid SCADA actuando como maestro Modbus RTU.
+
+**Configuración:**
+- Maestro: Rapid SCADA Communicator
+- Puerto: COM8
+- Medio físico: USB-RS485 + MAX485
+- Protocolo: Modbus RTU
+- Baud rate: 9600 bit/s
+- Formato: 8N1
+- Esclavo: ID 1
+- Función: 03 - Read Holding Registers
+- Dirección inicial: 0
+- Cantidad: 7 registros
+
+**Resultado:**
+- Communication channel: COM8, open
+- ESP32 NodeMCU: Normal
+- Petición observada: 01 03 00 00 00 07 ...
+- Respuestas recibidas correctamente.
+- HR0...HR6 adquiridos sin errores.
+- Estado del polling: OK.
+
+**Estado:** APROBADO
