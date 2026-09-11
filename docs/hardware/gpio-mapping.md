@@ -16,39 +16,73 @@
 
 | HC-SR04 | ECHO | 26 | Verificado | Divisor 1 kΩ / 2 kΩ |
 
-| MAX485 | DI / TX | 17 | Verificado | UART2 |
+| MAX485 | DI / TX | 17 | Verificado | UART2 TX |
 
-| MAX485 | RO / RX | 16 | Verificado | Divisor 1 kΩ / 2 kΩ |
+| MAX485 | RO / RX | 16 | Verificado | UART2 RX mediante divisor 1 kΩ / 2 kΩ |
 
-| MAX485 | DE + /RE | 4 | Verificado | Control half-duplex |
+| MAX485 | DE + /RE | 4 | Verificado | Control de dirección half-duplex |
 
-| Encoder | Canal A | 32 | Verificado | Pull-up 4.7 kΩ a 3.3 V |
+| Encoder | Canal A | 32 | Verificado | Pull-up externo 4.7 kΩ a 3.3 V |
 
-| Encoder | Canal B | 33 | Verificado | Pull-up 4.7 kΩ a 3.3 V |
-
-
-
-\## Pines reservados
+| Encoder | Canal B | 33 | Verificado | Pull-up externo 4.7 kΩ a 3.3 V |
 
 
 
-\- GPIO27: DHT11
-
-\- GPIO25: HC-SR04 TRIG
-
-\- GPIO26: HC-SR04 ECHO
-
-\- GPIO17: RS485 TX
-
-\- GPIO16: RS485 RX
-
-\- GPIO4: RS485 DE/RE
-
-\- GPIO32: Encoder A
-
-\- GPIO33: Encoder B
+\---
 
 
 
-La fase Z del encoder no se utiliza en la implementación actual.
+\## Alimentación y adaptación de niveles
+
+
+
+\### DHT11
+
+
+
+\- VCC: 3.3 V
+
+\- GND: común
+
+\- DATA: GPIO27
+
+
+
+\### HC-SR04
+
+
+
+\- VCC: 5 V
+
+\- GND: común
+
+\- TRIG: GPIO25
+
+\- ECHO: GPIO26 mediante divisor resistivo
+
+
+
+Divisor ECHO:
+
+
+
+```text
+
+HC-SR04 ECHO
+
+&#x20;    │
+
+&#x20;   1 kΩ
+
+&#x20;    │
+
+&#x20;    ├──── GPIO26
+
+&#x20;    │
+
+&#x20;   2 kΩ
+
+&#x20;    │
+
+&#x20;   GND
 

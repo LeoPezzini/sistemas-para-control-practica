@@ -214,11 +214,31 @@ Los resultados se publican mediante:
 
 ### Resultado
 
-Pendiente de ensayo.
+Durante el ensayo se obtuvieron:
+
+- temperatura: 24.0 °C;
+- velocidad compensada: 345.84 m/s;
+- tiempo de eco: 747 µs;
+- distancia sin compensar: 12.81 cm;
+- distancia compensada: 12.92 cm.
+
+Mediante Modbus Poll se observaron:
+
+- HR0 = 240;
+- HR1 = 80;
+- HR2 = 128;
+- HR3 = 129.
+
+La comunicación Modbus se mantuvo sin errores durante el ensayo.
 
 ### Estado
 
-**PENDIENTE**
+**APROBADO**
+
+### Observación
+
+La verificación funcional de la compensación no reemplaza la
+caracterización definitiva del HC-SR04 contra el instrumento patrón.
 
 ## TEST-008 - Encoder incremental Omron E6B2-CWZ6C
 
@@ -330,3 +350,150 @@ desde Rapid SCADA actuando como maestro Modbus RTU.
 - Estado del polling: OK.
 
 **Estado:** APROBADO
+
+---
+
+## TEST-011 - Supervisión mediante Rapid SCADA Webstation
+
+**Fecha:** 2026-09-10
+
+### Objetivo
+
+Verificar la visualización de las variables adquiridas por el ESP32
+mediante Rapid SCADA Webstation.
+
+### Configuración
+
+Se utilizó la vista:
+
+`ESP32.tbl`
+
+Canales visualizados:
+
+- 101 - Temperatura;
+- 102 - Humedad;
+- 103 - Distancia sin compensación;
+- 104 - Distancia compensada;
+- 105 - Encoder HIGH;
+- 106 - Encoder LOW;
+- 107 - Posición angular.
+
+### Procedimiento
+
+Se modificó físicamente la distancia medida por el HC-SR04 y se giró
+el eje del encoder mientras Webstation permanecía abierto.
+
+### Resultado
+
+Las variables mostradas en Webstation respondieron dinámicamente
+a los cambios realizados sobre los sensores.
+
+Se verificó la cadena completa:
+
+ESP32 → Modbus RTU → RS485 → Communicator → Server → Webstation.
+
+### Estado
+
+**APROBADO**
+
+---
+
+## TEST-012 - Registro histórico de temperatura y humedad cada 30 segundos
+
+**Fecha:** 2026-09-10
+
+### Objetivo
+
+Verificar el almacenamiento histórico de temperatura y humedad con
+un período de 30 segundos y su posterior exportación a Microsoft Excel.
+
+### Configuración
+
+Archivo histórico:
+
+- Code: `Sec30`;
+- Name: `30 Second Archive`;
+- Kind: `Historical`;
+- Module: `ModArcBasic`;
+- Writing period: 30 s;
+- Writing offset: 0 s.
+
+Canales asociados:
+
+- 101 - Temperatura;
+- 102 - Humedad.
+
+En la base de configuración el archivo personalizado se encuentra
+asociado al bit 16.
+
+### Procedimiento
+
+Se dejó el sistema adquiriendo datos y posteriormente se generó
+un Historical Data Report utilizando el archivo `Sec30`.
+
+El reporte fue exportado a Microsoft Excel.
+
+### Resultado
+
+Se observaron muestras consecutivas con timestamps:
+
+- 11:10:00
+- 11:10:30
+- 11:11:00
+- 11:11:30
+- 11:12:00
+- 11:12:30
+
+Esto confirma experimentalmente que el período de almacenamiento
+del archivo histórico es de 30 segundos.
+
+La exportación del reporte a Microsoft Excel se realizó correctamente.
+
+### Estado
+
+**APROBADO**
+
+### Observación
+
+Queda pendiente realizar la adquisición definitiva durante 24 horas.
+
+---
+
+## TEST-013 - Acceso remoto a Webstation desde dispositivo móvil
+
+**Fecha:** 2026-09-10
+
+### Objetivo
+
+Verificar el acceso a Rapid SCADA Webstation desde un dispositivo
+diferente de la PC que ejecuta el servidor.
+
+### Configuración
+
+- Webstation: TCP puerto 10008;
+- PC y teléfono conectados a la misma red local;
+- acceso mediante dirección IPv4 local de la PC;
+- regla de entrada de Windows Firewall habilitada para TCP 10008.
+
+### Procedimiento
+
+Inicialmente se intentó acceder desde el teléfono con Windows Firewall
+activo, sin obtener conexión.
+
+Se desactivó temporalmente el firewall como prueba diagnóstica,
+verificándose que el teléfono podía acceder correctamente a Webstation.
+
+Posteriormente se habilitó una regla de entrada específica para
+TCP 10008 y se volvió a activar Windows Firewall.
+
+### Resultado
+
+El teléfono pudo acceder correctamente a Webstation con Windows
+Firewall activo.
+
+Se verificó el acceso a la interfaz SCADA desde un navegador de
+otro dispositivo conectado a la misma red local.
+
+### Estado
+
+**APROBADO**
