@@ -396,6 +396,7 @@ Para las variables transmitidas escaladas ×10 se utiliza la fórmula de entrada
 ```text
 Cnl * 0.1
 ```
+De modo de adaptar la lectura a los valores esperados en sus variables correspondientes.
 
 La fórmula se aplica a:
 
@@ -405,7 +406,7 @@ La fórmula se aplica a:
 - canal 104;
 - canal 107.
 
-Los canales 105 y 106 conservan las palabras de 16 bits del contador del encoder sin aplicar dicha escala.
+Los canales 105 y 106 conservan las palabras de 16 bits del contador del encoder sin aplicar dicha escala (datos de uso interno para corroboracion).
 
 ---
 
@@ -440,7 +441,7 @@ Se verificó el acceso desde:
 - navegador de un teléfono conectado a la misma red local.
 
 Para permitir el acceso desde otros dispositivos se configuró una regla de entrada en Windows Firewall para TCP 10008.
-
+El acceso y lectura desde otro dispositivo celular se realizo correctamente.
 ---
 
 ## Registro histórico
