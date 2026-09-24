@@ -50,3 +50,10 @@
 
 | DEC-022 | 2026-09-10 | Habilitar TCP 10008 en Windows Firewall para acceso local a Webstation | Permite conexiones desde otros dispositivos manteniendo activo el firewall del sistema | Aprobada |
 
+| DEC-023 | 2026-09-16 | Utilizar una VPN para verificar el acceso remoto a Rapid SCADA Webstation a través de Internet | La cátedra confirmó que el acceso solicitado debe realizarse por Internet y que puede utilizarse una VPN. Se implementó Tailscale para verificar el acceso remoto sin exponer directamente Webstation mediante port forwarding | Aprobada |
+
+| DEC-024 | 2026-09-18 | Restringir el acceso remoto compartido al servicio necesario para Webstation | En la implementación de prueba con Tailscale se restringió el acceso compartido al host SCADA y al servicio TCP 10008, sin utilizar Exit Node ni Subnet Router | Aprobada |
+
+| DEC-025 | 2026-09-16 | Eliminar del alcance el envío de comandos de posición relativa a un robot | La cátedra confirmó que la referencia al robot incluida en el documento original correspondía a un error del enunciado y que dicha funcionalidad no forma parte de los requisitos de la práctica | Cerrada |
+
+| DEC-026 | 2026-09-18 | Mantener la compensación térmica del HC-SR04 sin aplicar una corrección empírica adicional | La caracterización contra el UNI-T LM50A mostró una reducción del error absoluto medio al utilizar compensación por temperatura. Se decidió conservar el modelo físico implementado y documentar el error experimental observado en lugar de ajustar las mediciones a los puntos ensayados | Aprobada |
