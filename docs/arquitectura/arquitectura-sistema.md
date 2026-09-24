@@ -373,4 +373,3 @@ Por lo tanto, una interrupción de la conexión a Internet o de la VPN afecta el
 
 
 La arquitectura de adquisición, comunicación Modbus RTU, supervisión mediante Rapid SCADA, registro histórico y acceso remoto mediante VPN fue implementada y verificada experimentalmente.
-
