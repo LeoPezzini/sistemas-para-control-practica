@@ -524,7 +524,7 @@ La exportación del reporte a Microsoft Excel se realizó correctamente.
 
 ### Observación
 
-Queda pendiente realizar la adquisición definitiva durante 24 horas.
+La verificación puntual del período de 30 s se complementó posteriormente con el ensayo prolongado documentado en TEST-016.
 
 ---
 
