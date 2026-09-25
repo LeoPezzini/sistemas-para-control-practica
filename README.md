@@ -200,22 +200,6 @@ Ambos valores se publican mediante Modbus para permitir su comparación.
 
 #### Caracterización
 
-La caracterización definitiva está prevista utilizando el medidor patrón **UNI-T LM50A** provisto por la cátedra.
-
-Se prevén mediciones en incrementos de 10 cm dentro del rango definido para el ensayo.
-
-Para cada punto se registrarán:
-
-- distancia patrón;
-- temperatura;
-- distancia ultrasónica sin compensación;
-- distancia ultrasónica compensada;
-- error respecto del patrón.
-
-Posteriormente se realizará la curva de error correspondiente.
-
-#### Caracterización
-
 La caracterización del HC-SR04 se realizó utilizando el medidor **UNI-T LM50A** como instrumento de referencia.
 
 Se registraron seis puntos de ensayo comparando:
@@ -555,12 +539,20 @@ La generación y exportación del reporte Excel fue verificada.
 
 ### Ensayo continuo de 24 horas
 
-Se inició el ensayo definitivo de adquisición continua durante 24 horas, manteniendo el registro de temperatura y humedad con un período de almacenamiento de 30 segundos.
+El ensayo definitivo se realizó entre el 24 y el 25 de septiembre de 2026, registrando temperatura y humedad en el archivo `Sec30` cada 30 segundos.
 
-Para un período completo de 24 horas se esperan teóricamente:
+La exportación histórica abarcó una ventana de 24 h 10 min. Considerando desde el primer registro válido hasta el final del ensayo se obtuvieron:
 
-```text
-24 × 60 × 60 / 30 = 2880 muestras por variable
+- 2793 registros válidos sobre 2878 instantes de muestreo;
+- disponibilidad de registro: **97.05 %**;
+- tres interrupciones detectadas, siendo la mayor de aproximadamente 34.5 min;
+- temperatura registrada: 26 a 30 °C, promedio 28.32 °C;
+- humedad relativa registrada: 5 a 6 %, promedio 5.50 %.
+
+La interrupción principal coincidió con trabajos realizados sobre otro montaje en la misma mesa. No se determinó de forma concluyente su causa, por lo que los intervalos faltantes se conservan como datos perdidos y no se interpolan.
+
+Los valores muy bajos de humedad coincidieron con condiciones ambientales extremadamente secas durante un episodio de viento Zonda. Como verificación funcional posterior, el DHT11 respondió inmediatamente al ser expuesto a un ambiente local de mayor humedad, aumentando aproximadamente hasta 75 % HR. Esta comprobación verifica respuesta del sensor, pero no constituye una calibración.
+
 ---
 
 ## Comunicación validada
@@ -583,7 +575,8 @@ Se verificaron experimentalmente:
 14. acceso remoto a Webstation a través de Internet mediante Tailscale;
 15. acceso remoto desde otro usuario, dispositivo y red externa;
 16. caracterización del HC-SR04 contra el UNI-T LM50A;
-17. reducción del error experimental mediante compensación por temperatura.
+17. reducción del error experimental mediante compensación por temperatura;
+18. ensayo histórico de aproximadamente 24 h con disponibilidad de registro de 97.05 %.
 
 ---
 
@@ -622,6 +615,6 @@ Se verificaron experimentalmente:
 | Archivo histórico de 30 s | ✅ |
 | Exportación a Excel | ✅ |
 | Caracterización HC-SR04 con LM50A | ✅ |
-| Registro definitivo de 24 h | 🔄 En curso |
+| Registro definitivo de 24 h | ✅ Completado (97.05 % de disponibilidad) |
 | Prueba / coordinación de bus RS485 compartido | ⏳ A definir con la cátedra |
 | Informe y documentación final | 🔄 En desarrollo |
