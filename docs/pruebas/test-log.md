@@ -697,47 +697,52 @@ No se aplicó una corrección empírica adicional al firmware a partir de estos 
 
 ## TEST-016 - Registro continuo de temperatura y humedad durante 24 horas
 
-**Fecha de inicio:** 2026-09-24
+**Fecha:** 2026-09-24 a 2026-09-25
 
 ### Objetivo
 
-Verificar el funcionamiento continuo del sistema de adquisición y almacenamiento histórico durante un período de 24 horas, registrando temperatura y humedad relativa con un período de almacenamiento de 30 segundos.
+Verificar el funcionamiento prolongado del sistema de adquisición y almacenamiento histórico, registrando temperatura y humedad relativa con un período de 30 segundos.
 
 ### Configuración
 
-- variables registradas: temperatura y humedad relativa;
+- variables: temperatura y humedad relativa;
 - canales Rapid SCADA: 101 y 102;
 - archivo histórico: `Sec30`;
-- período de almacenamiento: 30 segundos;
-- duración prevista: 24 horas.
-
-Para una adquisición completa de 24 horas se esperan teóricamente:
-
-`24 × 60 × 60 / 30 = 2880 muestras por variable`
-
-### Procedimiento
-
-Se inició la adquisición continua manteniendo operativo el conjunto formado por:
-
-ESP32 → Modbus RTU → RS485 → Rapid SCADA Communicator → Server → archivo histórico `Sec30`.
-
-Al finalizar el período se verificará la continuidad temporal de los registros y se generará el reporte histórico correspondiente.
+- período de almacenamiento: 30 s;
+- cadena: ESP32 → Modbus RTU → RS485 → Rapid SCADA Communicator → Server → `Sec30`.
 
 ### Resultado
 
-**Ensayo actualmente en curso.**
+La exportación de Rapid SCADA comprendió la ventana 24/09/2026 15:30:00 a 25/09/2026 15:40:00. Los primeros registros válidos aparecen a las 15:41:30 del 24/09.
 
-Los resultados se incorporarán una vez completadas las 24 horas de adquisición.
+Considerando desde el primer dato válido hasta el final:
 
-Se verificará:
+- instantes de muestreo posibles: 2878;
+- registros válidos simultáneos de temperatura y humedad: 2793;
+- registros faltantes: 85;
+- disponibilidad de registro: **97.05 %**.
 
-- duración efectiva del registro;
-- cantidad de muestras obtenidas;
-- continuidad de los timestamps;
-- presencia de eventuales interrupciones;
-- almacenamiento de temperatura y humedad;
-- generación y exportación del reporte histórico.
+Se identificaron tres intervalos sin datos:
+
+| Intervalo | Muestras faltantes | Duración representada |
+|---|---:|---:|
+| 24/09 16:43:30 - 16:44:30 | 3 | 1.5 min |
+| 25/09 09:06:00 - 09:12:00 | 13 | 6.5 min |
+| 25/09 09:16:30 - 09:50:30 | 69 | 34.5 min |
+
+La interrupción de mayor duración coincidió temporalmente con trabajos realizados sobre otro montaje en la misma mesa, con movimientos y vibraciones próximos al prototipo. Al detectarse la ausencia de nuevas mediciones se revisó físicamente el montaje y la adquisición se restableció. No fue posible determinar de manera concluyente la causa, por lo que los intervalos se documentan como datos faltantes y no se interpolan.
+
+### Variables registradas
+
+- temperatura: mínimo 26 °C, máximo 30 °C, promedio 28.32 °C;
+- humedad relativa: mínimo 5 %, máximo 6 %, promedio 5.50 %.
+
+Los valores bajos de humedad coincidieron con condiciones ambientales extremadamente secas durante un episodio de viento Zonda. Como comprobación funcional posterior, el DHT11 respondió ante un incremento local de humedad, elevando su lectura aproximadamente hasta 75 % HR. Esta prueba verifica que el canal responde a cambios de humedad, pero no constituye una calibración ni una verificación de exactitud.
+
+### Conclusión
+
+El sistema completó el ensayo prolongado y mantuvo el registro periódico durante la mayor parte de la ventana evaluada. Las interrupciones observadas quedan documentadas como parte del resultado experimental y permiten cuantificar una disponibilidad de registro del 97.05 %.
 
 ### Estado
 
-**EN CURSO**
+**APROBADO CON INTERRUPCIONES DOCUMENTADAS**
