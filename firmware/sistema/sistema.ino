@@ -302,7 +302,7 @@ void setup() {
   mb.begin(&RS485, RS485_DIR);
 
   // ESP32 = Modbus Slave ID 1
-  mb.slave(1);
+  mb.slave(3);
 
   // ----------------------------------------------------------
   // REGISTROS MODBUS
