@@ -200,21 +200,37 @@ Ambos valores se publican mediante Modbus para permitir su comparación.
 
 #### Caracterización
 
-La caracterización definitiva está prevista utilizando el medidor patrón **UNI-T LM50A** provisto por la cátedra.
+La caracterización del HC-SR04 se realizó utilizando el medidor **UNI-T LM50A** como instrumento de referencia.
 
-Se prevén mediciones en incrementos de 10 cm dentro del rango definido para el ensayo.
+Se registraron seis puntos de ensayo comparando:
 
-Para cada punto se registrarán:
+- distancia indicada por el instrumento de referencia;
+- distancia calculada por el HC-SR04 utilizando una velocidad fija del sonido de 343 m/s;
+- distancia calculada utilizando compensación por temperatura.
 
-- distancia patrón;
-- temperatura;
-- distancia ultrasónica sin compensación;
-- distancia ultrasónica compensada;
-- error respecto del patrón.
+Los resultados obtenidos fueron:
 
-Posteriormente se realizará la curva de error correspondiente.
+| UNI-T LM50A [cm] | HC-SR04 sin compensar [cm] | HC-SR04 compensado [cm] |
+|---:|---:|---:|
+| 27 | 26.5 | 26.8 |
+| 34 | 33.4 | 33.8 |
+| 44 | 41.9 | 42.4 |
+| 39 | 37.4 | 37.9 |
+| 30 | 28.8 | 29.2 |
+| 21 | 19.4 | 19.6 |
 
-**Estado: pendiente de ensayo con instrumento patrón.**
+El error absoluto medio obtenido fue aproximadamente:
+
+- sin compensación: **1.27 cm**;
+- con compensación: **0.88 cm**.
+
+En las condiciones del ensayo, la compensación por temperatura redujo el error absoluto medio aproximadamente un **30 %** y produjo una mejora en los seis puntos registrados.
+
+La documentación consultada para el HC-SR04 indica una resolución de **0.3 cm**. Esta especificación corresponde a resolución y no se interpreta como exactitud o error máximo del sensor.
+
+Las condiciones experimentales y el análisis completo de los errores se encuentran documentados en `docs/pruebas/test-log.md`.
+
+**Estado: caracterización realizada.**
 
 ---
 
@@ -440,8 +456,29 @@ Se verificó el acceso desde:
 - navegador de la PC;
 - navegador de un teléfono conectado a la misma red local.
 
-Para permitir el acceso desde otros dispositivos se configuró una regla de entrada en Windows Firewall para TCP 10008.
-El acceso y lectura desde otro dispositivo celular se realizo correctamente.
+Para permitir el acceso desde otros dispositivos de la red local se configuró una regla de entrada en Windows Firewall para TCP 10008.
+
+### Acceso remoto mediante VPN
+
+Además del acceso dentro de la red local, se verificó el acceso a Webstation a través de Internet utilizando **Tailscale** como red privada virtual.
+
+La PC que ejecuta Rapid SCADA fue incorporada a la red Tailscale y Webstation se mantuvo disponible mediante el mismo puerto TCP 10008.
+
+La verificación se realizó desde:
+
+- un teléfono móvil utilizando datos móviles, sin conexión a la red local de la PC;
+- un segundo teléfono perteneciente a otro integrante del grupo, conectado desde una red Wi-Fi externa.
+
+En ambos casos fue posible acceder correctamente a Rapid SCADA Webstation mediante la dirección asignada por Tailscale.
+
+Para el acceso compartido se aplicó un criterio de mínimo privilegio, restringiendo la comunicación al host que ejecuta Rapid SCADA y al servicio TCP 10008.
+
+No se configuró la PC como Exit Node ni como router de subred.
+
+La arquitectura definitiva para la interconexión entre los sistemas de los distintos grupos queda sujeta a la configuración que determine la cátedra.
+
+**Estado: acceso local y acceso remoto mediante VPN verificados.**
+
 ---
 
 ## Registro histórico
@@ -500,7 +537,21 @@ Para una adquisición continua de 24 horas se esperan aproximadamente:
 
 La generación y exportación del reporte Excel fue verificada.
 
-**Pendiente:** realizar la adquisición definitiva durante 24 horas.
+### Ensayo continuo de 24 horas
+
+El ensayo definitivo se realizó entre el 24 y el 25 de septiembre de 2026, registrando temperatura y humedad en el archivo `Sec30` cada 30 segundos.
+
+La exportación histórica abarcó una ventana de 24 h 10 min. Considerando desde el primer registro válido hasta el final del ensayo se obtuvieron:
+
+- 2793 registros válidos sobre 2878 instantes de muestreo;
+- disponibilidad de registro: **97.05 %**;
+- tres interrupciones detectadas, siendo la mayor de aproximadamente 34.5 min;
+- temperatura registrada: 26 a 30 °C, promedio 28.32 °C;
+- humedad relativa registrada: 5 a 6 %, promedio 5.50 %.
+
+La interrupción principal coincidió con trabajos realizados sobre otro montaje en la misma mesa. No se determinó de forma concluyente su causa, por lo que los intervalos faltantes se conservan como datos perdidos y no se interpolan.
+
+Los valores muy bajos de humedad coincidieron con condiciones ambientales extremadamente secas durante un episodio de viento Zonda. Como verificación funcional posterior, el DHT11 respondió inmediatamente al ser expuesto a un ambiente local de mayor humedad, aumentando aproximadamente hasta 75 % HR. Esta comprobación verifica respuesta del sensor, pero no constituye una calibración.
 
 ---
 
@@ -521,6 +572,11 @@ Se verificaron experimentalmente:
 11. registro histórico cada 30 segundos;
 12. generación de reporte Excel;
 13. acceso a Webstation desde un dispositivo móvil de la red local.
+14. acceso remoto a Webstation a través de Internet mediante Tailscale;
+15. acceso remoto desde otro usuario, dispositivo y red externa;
+16. caracterización del HC-SR04 contra el UNI-T LM50A;
+17. reducción del error experimental mediante compensación por temperatura;
+18. ensayo histórico de aproximadamente 24 h con disponibilidad de registro de 97.05 %.
 
 ---
 
@@ -554,11 +610,11 @@ Se verificaron experimentalmente:
 | Rapid SCADA / Modbus RTU | ✅ |
 | Canales y escalado SCADA | ✅ |
 | Webstation | ✅ |
-| Acceso desde dispositivo móvil | ✅ |
+| Acceso desde dispositivo móvil en red local | ✅ |
+| Acceso remoto mediante Tailscale | ✅ |
 | Archivo histórico de 30 s | ✅ |
 | Exportación a Excel | ✅ |
-| Caracterización HC-SR04 con LM50A | ⏳ |
-| Registro definitivo de 24 h | ⏳ |
-| Prueba/coord. de bus RS485 compartido | ⏳ |
-| Comando de posición relativa al robot | ❓ Aclarar con cátedra |
-| Informe y documentación final | ⏳ |
+| Caracterización HC-SR04 con LM50A | ✅ |
+| Registro definitivo de 24 h | ✅ Completado (97.05 % de disponibilidad) |
+| Prueba / coordinación de bus RS485 compartido | ⏳ A definir con la cátedra |
+| Informe y documentación final | 🔄 En desarrollo |
