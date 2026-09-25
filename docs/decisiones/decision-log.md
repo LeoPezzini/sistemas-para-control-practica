@@ -1,59 +1,32 @@
-\# Registro de decisiones de diseño
-
-
+# Registro de decisiones de diseño
 
 | ID | Fecha | Decisión | Justificación | Estado |
-
 |---|---|---|---|---|
-
 | DEC-001 | 2026-08-31 | Evaluar la Waveshare ESP32-S3-POE-ETH-8DI-8DO como plataforma principal | Plataforma provista inicialmente por la cátedra | Cerrada |
-
 | DEC-002 | 2026-08-31 | Utilizar RS485 como medio de comunicación | Requisito definido para la práctica | Aprobada |
-
 | DEC-003 | 2026-09-01 | Utilizar GPIO27 para DHT11 en ESP32 NodeMCU | Funcionamiento verificado experimentalmente | Aprobada |
-
 | DEC-004 | 2026-09-01 | Utilizar `dhtESP32-rmt` para adquisición DHT11 | Funcionamiento estable verificado sobre ESP32 | Aprobada |
-
-| DEC-005 | 2026-09-01 | Utilizar ESP32 NodeMCU como nodo principal de adquisición | DHT11, HC-SR04 y comunicación fueron verificados sobre GPIO directos. La utilización del NodeMCU fue posteriormente aceptada por la cátedra | Aprobada |
-
-| DEC-006 | 2026-09-02 | Utilizar MAX485 disponible para RS485 | Permite implementar la interfaz física requerida; se incorpora adaptación de nivel en RO | Aprobada |
-
+| DEC-005 | 2026-09-01 | Utilizar ESP32 NodeMCU como nodo principal de adquisición | Sensores y comunicación fueron verificados sobre GPIO directos; la cátedra aceptó su utilización | Aprobada |
+| DEC-006 | 2026-09-02 | Utilizar MAX485 disponible para RS485 | Permite implementar la interfaz física requerida incorporando adaptación de nivel en RO | Aprobada |
 | DEC-007 | 2026-09-02 | Utilizar GPIO17, GPIO16 y GPIO4 para RS485 | Configuración verificada mediante comunicación ESP32-PC | Aprobada |
-
-| DEC-008 | 2026-09-02 | Utilizar ESP32 como Modbus RTU Slave ID 1 | La comunicación fue verificada mediante Modbus Poll sobre RS485 | Aprobada |
-
-| DEC-009 | 2026-09-04 | Compensar la medición ultrasónica utilizando la temperatura medida por el DHT11 | La velocidad del sonido depende de la temperatura y la compensación constituye un requisito explícito de la práctica | Aprobada |
-
-| DEC-010 | 2026-09-04 | Conservar en Modbus la distancia sin compensar y la distancia compensada | Permite evaluar posteriormente el efecto de la compensación durante la caracterización contra el patrón | Aprobada |
-
-| DEC-011 | 2026-09-09 | Utilizar GPIO32 y GPIO33 para las fases A y B del encoder | Pines disponibles y funcionamiento verificado experimentalmente | Aprobada |
-
-| DEC-012 | 2026-09-09 | Representar la posición angular del encoder entre 0° y 360° | El enunciado requiere adquirir posición angular de un encoder incremental | Aprobada |
-
-| DEC-013 | 2026-09-09 | Utilizar 2000 cuentas por revolución en la implementación actual | Se detectan ambos flancos de la fase A en un encoder de 1000 P/R | Aprobada |
-
-| DEC-014 | 2026-09-09 | Transmitir el contador del encoder en dos registros Modbus de 16 bits | Permite conservar el contador de 32 bits con signo sin limitarlo a un único Holding Register | Aprobada |
-
-| DEC-015 | 2026-09-10 | Configurar Rapid SCADA Communicator como maestro Modbus RTU sobre COM8 | Permite integrar el nodo ESP32 al sistema SCADA utilizando la misma configuración 9600 8N1 previamente validada | Aprobada |
-
-| DEC-016 | 2026-09-10 | Leer HR0-HR6 como un único bloque contiguo mediante FC03 | Reduce la configuración y permite adquirir las siete variables mediante una única petición Modbus | Aprobada |
-
-| DEC-017 | 2026-09-10 | Utilizar canales 101-107 para representar las variables del ESP32 en Rapid SCADA | Permite asociar los registros Modbus con variables identificables dentro del sistema SCADA | Aprobada |
-
-| DEC-018 | 2026-09-10 | Aplicar `Cnl \* 0.1` en los canales transmitidos con escala ×10 | El ESP32 transmite estas magnitudes como enteros para transportarlas mediante registros Modbus de 16 bits | Aprobada |
-
-| DEC-019 | 2026-09-10 | Crear el archivo histórico personalizado `Sec30` con período de escritura de 30 s | Permite cumplir el requisito de registrar temperatura y humedad cada 30 segundos | Aprobada |
-
-| DEC-020 | 2026-09-10 | Asociar únicamente temperatura y humedad al archivo `Sec30` | El requisito de registro histórico de 24 h corresponde específicamente a estas dos variables | Aprobada |
-
-| DEC-021 | 2026-09-10 | Utilizar Webstation para supervisión desde PC y dispositivos de la red local | Permite acceder a la supervisión mediante navegador web | Aprobada |
-
-| DEC-022 | 2026-09-10 | Habilitar TCP 10008 en Windows Firewall para acceso local a Webstation | Permite conexiones desde otros dispositivos manteniendo activo el firewall del sistema | Aprobada |
-
-| DEC-023 | 2026-09-16 | Utilizar una VPN para verificar el acceso remoto a Rapid SCADA Webstation a través de Internet | La cátedra confirmó que el acceso solicitado debe realizarse por Internet y que puede utilizarse una VPN. Se implementó Tailscale para verificar el acceso remoto sin exponer directamente Webstation mediante port forwarding | Aprobada |
-
-| DEC-024 | 2026-09-18 | Restringir el acceso remoto compartido al servicio necesario para Webstation | En la implementación de prueba con Tailscale se restringió el acceso compartido al host SCADA y al servicio TCP 10008, sin utilizar Exit Node ni Subnet Router | Aprobada |
-
-| DEC-025 | 2026-09-16 | Eliminar del alcance el envío de comandos de posición relativa a un robot | La cátedra confirmó que la referencia al robot incluida en el documento original correspondía a un error del enunciado y que dicha funcionalidad no forma parte de los requisitos de la práctica | Cerrada |
-
-| DEC-026 | 2026-09-18 | Mantener la compensación térmica del HC-SR04 sin aplicar una corrección empírica adicional | La caracterización contra el UNI-T LM50A mostró una reducción del error absoluto medio al utilizar compensación por temperatura. Se decidió conservar el modelo físico implementado y documentar el error experimental observado en lugar de ajustar las mediciones a los puntos ensayados | Aprobada |
+| DEC-008 | 2026-09-02 | Utilizar ESP32 como Modbus RTU Slave ID 1 durante el desarrollo individual | Comunicación verificada mediante Modbus Poll y Rapid SCADA | Aprobada |
+| DEC-009 | 2026-09-04 | Compensar la medición ultrasónica con la temperatura del DHT11 | La velocidad del sonido depende de la temperatura y la compensación es requisito de la práctica | Aprobada |
+| DEC-010 | 2026-09-04 | Conservar distancia sin compensar y compensada en Modbus | Permite evaluar el efecto de la compensación | Aprobada |
+| DEC-011 | 2026-09-09 | Utilizar GPIO32 y GPIO33 para fases A y B del encoder | Pines disponibles y funcionamiento verificado | Aprobada |
+| DEC-012 | 2026-09-09 | Representar la posición angular entre 0° y 360° | Responde al requisito de adquirir posición angular | Aprobada |
+| DEC-013 | 2026-09-09 | Utilizar 2000 cuentas por revolución | Se detectan ambos flancos de A en un encoder de 1000 P/R | Aprobada |
+| DEC-014 | 2026-09-09 | Transmitir contador del encoder en dos registros de 16 bits | Conserva el contador de 32 bits con signo | Aprobada |
+| DEC-015 | 2026-09-10 | Configurar Rapid SCADA Communicator como maestro Modbus RTU sobre COM8 durante las pruebas del grupo | Integra el nodo usando 9600 8N1 previamente validado | Aprobada |
+| DEC-016 | 2026-09-10 | Leer HR0-HR6 como bloque contiguo mediante FC03 | Permite adquirir las siete variables con una petición | Aprobada |
+| DEC-017 | 2026-09-10 | Utilizar canales 101-107 en Rapid SCADA | Asocia los registros con variables identificables | Aprobada |
+| DEC-018 | 2026-09-10 | Aplicar `Cnl * 0.1` a variables transmitidas ×10 | Recupera las unidades físicas en SCADA | Aprobada |
+| DEC-019 | 2026-09-10 | Crear archivo histórico `Sec30` con período de 30 s | Cumple el requisito de registro periódico | Aprobada |
+| DEC-020 | 2026-09-10 | Asociar temperatura y humedad a `Sec30` | Son las variables requeridas para el registro prolongado | Aprobada |
+| DEC-021 | 2026-09-10 | Utilizar Webstation para supervisión web | Permite acceso mediante navegador | Aprobada |
+| DEC-022 | 2026-09-10 | Habilitar TCP 10008 en Windows Firewall | Permite acceso a Webstation manteniendo activo el firewall | Aprobada |
+| DEC-023 | 2026-09-16 | Utilizar VPN para verificar acceso remoto a Webstation | La cátedra confirmó que el acceso debe realizarse por Internet y que una VPN es válida | Aprobada |
+| DEC-024 | 2026-09-18 | Restringir el acceso remoto compartido al host SCADA y TCP 10008 | Aplica mínimo privilegio sin Exit Node ni Subnet Router | Aprobada |
+| DEC-025 | 2026-09-16 | Eliminar del alcance comandos de posición relativa a un robot | La cátedra confirmó que esa referencia era un error del enunciado | Cerrada |
+| DEC-026 | 2026-09-18 | Mantener compensación térmica sin corrección empírica adicional | La caracterización con LM50A mostró mejora y se prefirió documentar el error observado | Aprobada |
+| DEC-027 | 2026-09-25 | Conservar como datos faltantes las interrupciones del ensayo prolongado | No se determinó concluyentemente su causa; no se interpolan ni sustituyen mediciones ausentes | Aprobada |
+| DEC-028 | 2026-09-25 | Mantener pendiente la topología común entre grupos hasta definición de la cátedra | Evita documentar como implementada una arquitectura aún no confirmada | Pendiente |
