@@ -616,7 +616,7 @@ Se adoptó un criterio de mínimo privilegio.
 
 La configuración de acceso compartido permite alcanzar el host SCADA mediante TCP 10008, correspondiente a Webstation, sin utilizar la PC como Exit Node ni como router de subred.
 
-La arquitectura propuesta para la cátedra consiste en que cada grupo mantenga su propia PC SCADA y comparta únicamente dicho equipo con el supervisor.
+La prueba de acceso remoto mediante VPN corresponde al SCADA propio del grupo. Posteriormente, la cátedra definió por separado una topología de integración común basada en un único maestro Modbus RTU sobre RS485.
 
 ### Estado
 
@@ -746,3 +746,39 @@ El sistema completó el ensayo prolongado y mantuvo el registro periódico duran
 ### Estado
 
 **APROBADO CON INTERRUPCIONES DOCUMENTADAS**
+
+
+---
+
+## TEST-017 - Integración en bus RS485 común con maestro Modbus
+
+**Fecha:** 2026-09-25
+
+### Objetivo
+
+Verificar que el nodo ESP32 del grupo pueda integrarse junto con los nodos de otros grupos en un bus RS485 compartido y ser consultado por un único maestro Modbus RTU.
+
+### Configuración
+
+- medio físico: RS485;
+- protocolo: Modbus RTU;
+- función de lectura del nodo: FC03 - Read Holding Registers;
+- mapa del nodo: HR0-HR6;
+- Slave ID utilizado durante la integración: **3**;
+- maestro: sistema común dispuesto por la cátedra.
+
+El template Modbus del nodo se utilizó para describir al maestro las variables disponibles. El mapa de registros no requirió modificaciones respecto de las pruebas individuales.
+
+### Procedimiento
+
+Se modificó el Slave ID del ESP32 desde el valor 1 utilizado durante el desarrollo individual al valor 3 asignado para la integración. El firmware actualizado fue cargado en el ESP32 y el nodo se conectó al bus RS485 común.
+
+### Resultado
+
+El maestro Modbus pudo consultar correctamente el nodo del grupo junto con los demás nodos conectados al bus.
+
+La integración confirmó que el direccionamiento mediante Slave ID permite compartir el mismo medio RS485 manteniendo el mapa de registros propio de cada dispositivo.
+
+### Estado
+
+**APROBADO**
