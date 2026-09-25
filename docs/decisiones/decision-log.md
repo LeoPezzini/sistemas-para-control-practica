@@ -29,4 +29,5 @@
 | DEC-025 | 2026-09-16 | Eliminar del alcance comandos de posición relativa a un robot | La cátedra confirmó que esa referencia era un error del enunciado | Cerrada |
 | DEC-026 | 2026-09-18 | Mantener compensación térmica sin corrección empírica adicional | La caracterización con LM50A mostró mejora y se prefirió documentar el error observado | Aprobada |
 | DEC-027 | 2026-09-25 | Conservar como datos faltantes las interrupciones del ensayo prolongado | No se determinó concluyentemente su causa; no se interpolan ni sustituyen mediciones ausentes | Aprobada |
-| DEC-028 | 2026-09-25 | Mantener pendiente la topología común entre grupos hasta definición de la cátedra | Evita documentar como implementada una arquitectura aún no confirmada | Pendiente |
+| DEC-028 | 2026-09-25 | Integrar los nodos de los grupos bajo un único maestro Modbus RTU sobre el bus RS485 común | Arquitectura definida y probada por la cátedra | Aprobada |
+| DEC-029 | 2026-09-25 | Utilizar Slave ID 3 para el nodo de este grupo en la prueba común | Dirección asignada para evitar colisiones entre esclavos del mismo bus | Aprobada |
