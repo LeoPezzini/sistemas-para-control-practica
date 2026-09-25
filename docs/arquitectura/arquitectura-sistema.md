@@ -87,16 +87,21 @@ No se almacenan en este repositorio credenciales, claves de autenticación ni da
 
 ## 4. Topología común de la cátedra
 
-La arquitectura de adquisición y acceso remoto del grupo está validada. La eventual topología común para integrar nodos o sistemas de distintos grupos **permanece pendiente de definición por la cátedra**.
+La cátedra definió y verificó una topología común con **un único maestro Modbus RTU** y los nodos de los distintos grupos conectados como esclavos sobre el bus RS485 compartido.
 
-Hasta que dicha definición sea confirmada, este documento no presupone:
+Para integrar este nodo se mantuvo el mismo mapa de Holding Registers y el mismo template Modbus utilizado durante las pruebas individuales. La identificación del nodo en el bus se modificó de **Slave ID 1** a **Slave ID 3**.
 
-- qué equipo actuará como maestro del bus común;
-- qué Slave ID definitivo utilizará cada grupo;
-- qué parámetros físicos o de enlace serán adoptados para el bus compartido;
-- si existirá una única instancia SCADA central o una arquitectura distribuida.
+La integración requirió:
 
-Una vez confirmada la topología común, deberán ajustarse únicamente los parámetros que correspondan sin alterar la documentación de las pruebas ya realizadas.
+- modificar el Slave ID del firmware a 3;
+- configurar la dirección Modbus correspondiente en el maestro;
+- conservar HR0-HR6 y FC03 sin cambios;
+- entregar/utilizar el template Modbus del nodo para que el maestro pudiera interpretar sus variables;
+- conectar el nodo al bus RS485 común.
+
+La prueba conjunta fue satisfactoria: el maestro pudo consultar el nodo junto con los demás esclavos del bus.
+
+El Slave ID 1 queda documentado como la configuración utilizada durante el desarrollo individual; el Slave ID 3 corresponde a la prueba de integración común realizada el 25/09/2026.
 
 ## Independencia entre adquisición y acceso remoto
 
@@ -116,4 +121,4 @@ Una interrupción de Internet o de la VPN afecta el acceso remoto, pero no impli
 
 Adquisición, Modbus RTU, supervisión, registro histórico y acceso remoto mediante VPN: **implementados y verificados**.
 
-Topología común entre grupos: **pendiente de definición por la cátedra**.
+Topología común entre grupos: **implementada y verificada con maestro Modbus único y Slave ID 3 para este nodo**.
