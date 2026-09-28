@@ -301,7 +301,7 @@ void setup() {
   // DE y /RE del MAX485 unidos en GPIO4
   mb.begin(&RS485, RS485_DIR);
 
-  // ESP32 = Modbus Slave ID 1
+  // ESP32 = Modbus Slave ID 3 para integración en bus común
   mb.slave(3);
 
   // ----------------------------------------------------------
@@ -337,7 +337,7 @@ void setup() {
 
   Serial.println();
   Serial.println(
-    "Modbus RTU Slave ID: 1"
+    "Modbus RTU Slave ID: 3"
   );
 
   Serial.println();
