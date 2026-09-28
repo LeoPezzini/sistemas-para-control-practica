@@ -475,7 +475,7 @@ Para el acceso compartido se aplicó un criterio de mínimo privilegio, restring
 
 No se configuró la PC como Exit Node ni como router de subred.
 
-La arquitectura definitiva para la interconexión entre los sistemas de los distintos grupos queda sujeta a la configuración que determine la cátedra.
+La interconexión común fue finalmente validada por la cátedra mediante un único maestro Modbus RTU y varios nodos esclavos sobre el mismo bus RS485. Para la prueba común, el nodo de este grupo utilizó **Slave ID 3**.
 
 **Estado: acceso local y acceso remoto mediante VPN verificados.**
 
@@ -576,7 +576,8 @@ Se verificaron experimentalmente:
 15. acceso remoto desde otro usuario, dispositivo y red externa;
 16. caracterización del HC-SR04 contra el UNI-T LM50A;
 17. reducción del error experimental mediante compensación por temperatura;
-18. ensayo histórico de aproximadamente 24 h con disponibilidad de registro de 97.05 %.
+18. ensayo histórico de aproximadamente 24 h con disponibilidad de registro de 97.05 %;
+19. integración del nodo del grupo en el bus RS485 común de la cátedra, con maestro Modbus único y Slave ID 3.
 
 ---
 
@@ -616,5 +617,5 @@ Se verificaron experimentalmente:
 | Exportación a Excel | ✅ |
 | Caracterización HC-SR04 con LM50A | ✅ |
 | Registro definitivo de 24 h | ✅ Completado (97.05 % de disponibilidad) |
-| Prueba / coordinación de bus RS485 compartido | ⏳ A definir con la cátedra |
+| Integración al bus RS485 compartido / maestro común | ✅ Slave ID 3 validado |
 | Informe y documentación final | 🔄 En desarrollo |
